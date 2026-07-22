@@ -35,10 +35,10 @@ Done when: every experiment produces a machine-readable scorecard.
 
 ## M3: Virtual Gripper
 
-- Gripper state simulator
-- Intent-to-command controller
+- Gripper state simulator: implemented
+- Intent-to-command controller: implemented as direct intent commands
 - Trial target generator
-- Functional score
+- Functional score: implemented in evaluation reports
 
 Done when: replayed predictions can drive the virtual gripper and produce task
 success metrics.

@@ -28,3 +28,9 @@ direct ground-truth instruction.
 
 Replay: Running saved session data through the pipeline again to reproduce an
 experiment.
+
+Virtual gripper: A one-degree-of-freedom simulated gripper with a scalar
+position from `0.0` closed to `1.0` open.
+
+Functional score: A task-control metric computed from gripper behavior, such as
+target-position error or wrong-direction commands.

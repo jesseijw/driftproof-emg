@@ -5,7 +5,10 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from driftproof.acquisition.replay import read_jsonl
+from driftproof.control.virtual_gripper import score_functional_control
 from driftproof.drift.mahalanobis import fit_reference, score
 from driftproof.evaluation.metrics import classify_scorecard
 from driftproof.features.classical import extract_many, feature_matrix
@@ -38,6 +41,7 @@ def evaluate_session(
     model = train_baseline(x[train_mask], y[train_mask])
     pred_baseline = model.predict(x[train_mask])
     pred_drifted = model.predict(x[test_mask])
+    t_end = np.asarray([row.t_end for row in rows], dtype=float)
 
     ref = fit_reference(x[train_mask])
     drift_scores = score(ref, x[test_mask])
@@ -56,6 +60,18 @@ def evaluate_session(
             "baseline": _scorecard_dict(baseline_score),
             "drifted": _scorecard_dict(drifted_score),
         },
+        "functional": {
+            "baseline": _functional_score_dict(
+                pred_baseline,
+                y[train_mask],
+                t_end[train_mask],
+            ),
+            "drifted": _functional_score_dict(
+                pred_drifted,
+                y[test_mask],
+                t_end[test_mask],
+            ),
+        },
     }
 
 
@@ -67,3 +83,17 @@ def write_scorecard_report(report: dict[str, Any], path: str | Path) -> None:
 
 def _scorecard_dict(scorecard: Scorecard) -> dict[str, Any]:
     return asdict(scorecard)
+
+
+def _functional_score_dict(
+    predicted: np.ndarray,
+    target: np.ndarray,
+    timestamps_s: np.ndarray,
+) -> dict[str, Any]:
+    return asdict(
+        score_functional_control(
+            predicted.tolist(),
+            target.tolist(),
+            timestamps_s.tolist(),
+        )
+    )

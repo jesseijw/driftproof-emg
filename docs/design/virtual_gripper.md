@@ -32,14 +32,38 @@ frame intent accuracy.
 
 The first functional score can measure:
 
-- Time to target
+- Mean target-position error
+- Final target-position error
 - Wrong-direction command count
 - Rest stability near target
 - Failure rate per intent
 
+In the current implementation, the evaluation report feeds predicted window
+intents into the virtual gripper and compares the resulting scalar gripper
+position against the target intent implied by the replay label. `open` maps to
+position `1.0`, `close` maps to `0.0`, and `rest` maps to the neutral starting
+position.
+
+The JSON report includes a `functional` section with baseline and drifted
+scores:
+
+```json
+{
+  "functional": {
+    "baseline": {
+      "n_steps": 120,
+      "mean_target_error": 0.12,
+      "final_target_error": 0.0,
+      "wrong_direction_commands": 0,
+      "rest_motion": 0.0
+    }
+  }
+}
+```
+
 ## Acceptance Criteria
 
-- The virtual gripper can run from a replayed session.
+- The virtual gripper can run from a replayed session: implemented in reports.
 - The same control output can later drive a physical gripper adapter.
-- Functional scores are saved alongside classifier metrics.
+- Functional scores are saved alongside classifier metrics: implemented.
 - The UI makes current intent, confidence, and drift score visible.
