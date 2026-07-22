@@ -14,6 +14,14 @@ Each session is newline-delimited JSON. Records are append-only.
 - Known non-EMG records are validated at the record-envelope level and skipped
   by EMG-only readers.
 
+Compact firmware capture lines can omit DriftProof metadata:
+
+```json
+{"seq": 1, "channels": [0.01, 0.02, 0.03, 0.04]}
+```
+
+`driftproof capture-file` normalizes those lines into full `emg_sample` records.
+
 ## Record Types
 
 ### `session_metadata`

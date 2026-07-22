@@ -65,10 +65,11 @@ disabled.
 
 ## M6: Hardware Capture
 
+- File-based firmware log adapter: implemented
 - Serial acquisition adapter
 - Device metadata
-- Dropped-sample detection
-- Raw session saving
+- Dropped-sample detection: implemented with `seq` gaps
+- Raw session saving: implemented for JSONL firmware dumps
 
 Done when: a live hardware session creates a valid replay file.
 

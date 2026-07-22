@@ -56,6 +56,12 @@ python3 -m pytest
 The report compares the fixed baseline against a normalization-adapted drifted
 run. Use `--no-adaptation` to write only the fixed-baseline evaluation.
 
+Firmware JSONL dumps can be normalized into replayable sessions:
+
+```bash
+driftproof capture-file firmware_dump.jsonl --out data/raw/session.jsonl
+```
+
 ## Builder Docs
 
 Start with [docs/index.md](docs/index.md). It links the design specs for the

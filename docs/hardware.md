@@ -21,3 +21,21 @@
 4. Virtual gripper task
 5. Physical one-motor gripper
 6. Force/task-success logging
+
+## Firmware Log Contract
+
+Before live serial capture, firmware can be tested by dumping JSON lines:
+
+```json
+{"seq": 1, "channels": [0.02, -0.01, 0.04, 0.01]}
+{"seq": 2, "channels": [0.03, -0.02, 0.05, 0.00]}
+```
+
+Then normalize the dump:
+
+```bash
+driftproof capture-file firmware_dump.jsonl --out data/raw/session.jsonl
+```
+
+This creates a replay-compatible DriftProof session. Sequence gaps are counted
+as dropped samples, so firmware timing issues are visible before model work.

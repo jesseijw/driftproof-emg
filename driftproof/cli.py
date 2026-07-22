@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 import typer
 from rich.console import Console
 from rich.table import Table
 
+from driftproof.acquisition.capture import CaptureConfig, capture_lines_to_jsonl
 from driftproof.acquisition.simulated import generate_synthetic_session, write_jsonl
 from driftproof.evaluation.reporting import evaluate_session, write_scorecard_report
+from driftproof.types import IntentLabel
 
 app = typer.Typer(help="DriftProof EMG research platform")
 console = Console()
@@ -30,6 +33,33 @@ def simulate(
     )
     write_jsonl(samples, out)
     console.print(f"Wrote {len(samples)} samples to [bold]{out}[/bold]")
+
+
+@app.command("capture-file")
+def capture_file(
+    source: Path = typer.Argument(..., help="Raw firmware JSONL input"),
+    out: Path = typer.Option(Path("data/raw/session.jsonl"), help="Normalized session JSONL path"),
+    session_id: str = typer.Option("capture", help="Session id to apply when missing"),
+    sample_rate_hz: int = typer.Option(1_000, help="Sample rate for timestamp synthesis"),
+    label: str = typer.Option("rest", help="Label to apply when missing"),
+    condition: str = typer.Option("baseline", help="Condition to apply when missing"),
+) -> None:
+    """Normalize firmware-style capture logs into replayable session JSONL."""
+    if label not in {"rest", "open", "close"}:
+        raise typer.BadParameter("label must be one of: rest, open, close")
+    intent_label = cast(IntentLabel, label)
+    with source.open("r", encoding="utf-8") as f:
+        count = capture_lines_to_jsonl(
+            f,
+            out,
+            CaptureConfig(
+                session_id=session_id,
+                sample_rate_hz=sample_rate_hz,
+                label=intent_label,
+                condition=condition,
+            ),
+        )
+    console.print(f"Wrote {count} EMG samples to [bold]{out}[/bold]")
 
 
 @app.command()
