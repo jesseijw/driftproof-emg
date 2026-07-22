@@ -39,6 +39,7 @@ def evaluate(
     step_ms: int = typer.Option(100, help="Window step"),
     sample_rate_hz: int = typer.Option(1_000, help="Sample rate"),
     report: Path | None = typer.Option(None, help="Optional JSON scorecard output path"),
+    adaptation: bool = typer.Option(True, help="Compare normalization adaptation on drifted replay"),
 ) -> None:
     """Train on baseline windows and evaluate on drifted windows."""
     try:
@@ -47,6 +48,7 @@ def evaluate(
             window_ms=window_ms,
             step_ms=step_ms,
             sample_rate_hz=sample_rate_hz,
+            adaptation_enabled=adaptation,
         )
     except ValueError as exc:
         raise typer.BadParameter("session must include both baseline and drifted windows") from exc
@@ -59,7 +61,7 @@ def evaluate(
     table.add_column("Accuracy", justify="right")
     table.add_column("Macro F1", justify="right")
     table.add_column("Mean drift score", justify="right")
-    for split_name in ("baseline", "drifted"):
+    for split_name in scorecard["splits"]:
         split = scorecard["splits"][split_name]
         mean_drift = split["drift_score_mean"]
         table.add_row(

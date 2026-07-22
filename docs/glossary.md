@@ -23,6 +23,9 @@ to calibration.
 Adaptation: A controlled update to normalization or model state after
 calibration.
 
+Normalization-only adaptation: A replay or runtime strategy that updates feature
+normalization statistics while leaving classifier weights unchanged.
+
 Weak label: A noisy label inferred from context or confidence rather than a
 direct ground-truth instruction.
 

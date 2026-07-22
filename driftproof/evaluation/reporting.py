@@ -8,6 +8,10 @@ from typing import Any
 import numpy as np
 
 from driftproof.acquisition.replay import read_jsonl
+from driftproof.adaptation.experiment import (
+    adaptation_report,
+    run_feature_normalization_adaptation,
+)
 from driftproof.control.virtual_gripper import score_functional_control
 from driftproof.drift.calibration import threshold_report
 from driftproof.drift.mahalanobis import fit_reference, score
@@ -24,6 +28,9 @@ def evaluate_session(
     window_ms: int = 200,
     step_ms: int = 100,
     sample_rate_hz: int = 1_000,
+    adaptation_enabled: bool = True,
+    adaptation_confidence_threshold: float = 0.6,
+    adaptation_momentum: float = 0.02,
 ) -> dict[str, Any]:
     samples = read_jsonl(path)
     windows = make_windows(
@@ -49,6 +56,51 @@ def evaluate_session(
 
     baseline_score = classify_scorecard(y[train_mask], pred_baseline)
     drifted_score = classify_scorecard(y[test_mask], pred_drifted, drift_scores=drift_scores)
+    splits = {
+        "baseline": _scorecard_dict(baseline_score),
+        "drifted": _scorecard_dict(drifted_score),
+    }
+    functional = {
+        "baseline": _functional_score_dict(
+            pred_baseline,
+            y[train_mask],
+            t_end[train_mask],
+        ),
+        "drifted": _functional_score_dict(
+            pred_drifted,
+            y[test_mask],
+            t_end[test_mask],
+        ),
+    }
+    adaptation: dict[str, Any] = {"enabled": False}
+    if adaptation_enabled:
+        adaptation_result = run_feature_normalization_adaptation(
+            model,
+            x[train_mask],
+            x[test_mask],
+            confidence_threshold=adaptation_confidence_threshold,
+            momentum=adaptation_momentum,
+        )
+        adapted_score = classify_scorecard(
+            y[test_mask],
+            adaptation_result.predictions,
+            drift_scores=drift_scores,
+        )
+        splits["drifted_adapted"] = _scorecard_dict(adapted_score)
+        functional["drifted_adapted"] = _functional_score_dict(
+            adaptation_result.predictions,
+            y[test_mask],
+            t_end[test_mask],
+        )
+        adaptation = {
+            "enabled": True,
+            **adaptation_report(
+                adaptation_result,
+                confidence_threshold=adaptation_confidence_threshold,
+                momentum=adaptation_momentum,
+            ),
+        }
+
     return {
         "schema_version": 1,
         "source": str(path),
@@ -57,22 +109,9 @@ def evaluate_session(
             "step_ms": step_ms,
             "sample_rate_hz": sample_rate_hz,
         },
-        "splits": {
-            "baseline": _scorecard_dict(baseline_score),
-            "drifted": _scorecard_dict(drifted_score),
-        },
-        "functional": {
-            "baseline": _functional_score_dict(
-                pred_baseline,
-                y[train_mask],
-                t_end[train_mask],
-            ),
-            "drifted": _functional_score_dict(
-                pred_drifted,
-                y[test_mask],
-                t_end[test_mask],
-            ),
-        },
+        "splits": splits,
+        "functional": functional,
+        "adaptation": adaptation,
         "drift_calibration": threshold_report(drift_scores, pred_drifted != y[test_mask]),
     }
 

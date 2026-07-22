@@ -55,10 +55,10 @@ not only against synthetic distribution shift.
 
 ## M5: Adaptation Experiments
 
-- Normalization-only adaptation
-- No-adaptation control runs
-- Adaptation event logs
-- Before/after scorecards
+- Normalization-only adaptation: implemented for replay reports
+- No-adaptation control runs: implemented with `--no-adaptation`
+- Adaptation event logs: implemented in JSON report
+- Before/after scorecards: implemented as `drifted` vs `drifted_adapted`
 
 Done when: the same replay can be evaluated with adaptation enabled and
 disabled.

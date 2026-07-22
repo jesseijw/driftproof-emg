@@ -15,6 +15,26 @@ Normalization-only adaptation:
 This tests whether lightweight adaptation can recover performance under drift
 without turning the system into an untraceable learner.
 
+## Current Experiment
+
+The evaluator now runs an optional normalization-only adaptation comparison on
+the drifted replay split:
+
+```bash
+driftproof evaluate data/demo/session.jsonl --report reports/demo_scorecard.json
+```
+
+The report includes:
+
+- `splits.drifted`: fixed baseline model without adaptation.
+- `splits.drifted_adapted`: same model with runtime feature normalization.
+- `functional.drifted_adapted`: virtual-gripper score for adapted predictions.
+- `adaptation`: strategy name, confidence threshold, momentum, and update log.
+
+The model weights are not changed. Runtime feature statistics are blended only
+after confident predictions, and the original calibration statistics remain the
+reference.
+
 ## Safety Rules
 
 - Do not adapt during low-confidence predictions.
@@ -33,6 +53,6 @@ without turning the system into an untraceable learner.
 ## Acceptance Criteria
 
 - Evaluation can compare no-adaptation and adaptation runs on the same session.
-- Adaptation state is serializable.
+- Adaptation state is serializable through the JSON report.
 - Adaptation updates are visible in logs.
 - The original calibration model remains recoverable.

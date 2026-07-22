@@ -53,6 +53,9 @@ driftproof evaluate data/demo/session.jsonl --report reports/demo_scorecard.json
 python3 -m pytest
 ```
 
+The report compares the fixed baseline against a normalization-adapted drifted
+run. Use `--no-adaptation` to write only the fixed-baseline evaluation.
+
 ## Builder Docs
 
 Start with [docs/index.md](docs/index.md). It links the design specs for the
