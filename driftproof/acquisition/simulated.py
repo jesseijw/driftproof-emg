@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import json
-from collections.abc import Iterable
-from pathlib import Path
-
 import numpy as np
 
+from driftproof.acquisition.replay import read_jsonl, write_jsonl
 from driftproof.types import EmgSample, IntentLabel
+
+__all__ = ["generate_synthetic_session", "read_jsonl", "write_jsonl"]
 
 LABELS: tuple[IntentLabel, ...] = ("rest", "open", "close")
 
@@ -60,45 +59,4 @@ def generate_synthetic_session(
                 condition=condition,
             )
         )
-    return samples
-
-
-def write_jsonl(samples: Iterable[EmgSample], path: str | Path) -> None:
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as f:
-        for sample in samples:
-            record = {
-                "type": "emg_sample",
-                "session_id": sample.session_id,
-                "t": sample.t,
-                "channels": sample.channels.tolist(),
-                "label": sample.label,
-                "condition": sample.condition,
-                "dropped_samples": sample.dropped_samples,
-                "sensor_status": sample.sensor_status,
-            }
-            f.write(json.dumps(record, separators=(",", ":")) + "\n")
-
-
-def read_jsonl(path: str | Path) -> list[EmgSample]:
-    samples: list[EmgSample] = []
-    with Path(path).open("r", encoding="utf-8") as f:
-        for line in f:
-            if not line.strip():
-                continue
-            record = json.loads(line)
-            if record.get("type") != "emg_sample":
-                continue
-            samples.append(
-                EmgSample(
-                    session_id=record["session_id"],
-                    t=float(record["t"]),
-                    channels=np.asarray(record["channels"], dtype=float),
-                    label=record["label"],
-                    condition=record.get("condition", "baseline"),
-                    dropped_samples=int(record.get("dropped_samples", 0)),
-                    sensor_status=record.get("sensor_status", "ok"),
-                )
-            )
     return samples

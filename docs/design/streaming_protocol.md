@@ -11,20 +11,22 @@ written to a `.jsonl` file for replay.
 Each line is one JSON object with:
 
 - `type`: record type.
-- `timestamp_s`: monotonic session time in seconds.
-- `payload`: type-specific data.
+- `session_id`: stable session identifier.
+- `t`: monotonic session time in seconds.
+- Type-specific top-level fields.
 
 ## `emg_sample`
 
 ```json
 {
   "type": "emg_sample",
-  "timestamp_s": 12.345,
-  "payload": {
-    "channels": [0.02, -0.01, 0.04, 0.01],
-    "sample_rate_hz": 1000,
-    "units": "mV"
-  }
+  "session_id": "demo",
+  "t": 12.345,
+  "channels": [0.02, -0.01, 0.04, 0.01],
+  "label": "open",
+  "condition": "baseline",
+  "dropped_samples": 0,
+  "sensor_status": "ok"
 }
 ```
 
@@ -39,11 +41,10 @@ Rules:
 ```json
 {
   "type": "task_event",
-  "timestamp_s": 20.0,
-  "payload": {
-    "label": "open",
-    "phase": "trial_start"
-  }
+  "session_id": "demo",
+  "t": 20.0,
+  "name": "trial_start",
+  "label": "open"
 }
 ```
 
@@ -55,12 +56,11 @@ and trial outcomes.
 ```json
 {
   "type": "prediction",
-  "timestamp_s": 20.25,
-  "payload": {
-    "intent": "open",
-    "confidence": 0.82,
-    "drift_score": 1.7
-  }
+  "session_id": "demo",
+  "t": 20.25,
+  "intent": "open",
+  "confidence": 0.82,
+  "drift_score": 1.7
 }
 ```
 
