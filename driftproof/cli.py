@@ -11,6 +11,11 @@ from driftproof.acquisition.capture import CaptureConfig, capture_lines_to_jsonl
 from driftproof.acquisition.simulated import generate_synthetic_session, write_jsonl
 from driftproof.evaluation.reporting import evaluate_session, write_scorecard_report
 from driftproof.experiments.manifest import ManifestError, run_manifest
+from driftproof.protocols.trials import (
+    TrialPhase,
+    generate_trial_schedule,
+    write_trial_schedule_jsonl,
+)
 from driftproof.types import IntentLabel
 
 app = typer.Typer(help="DriftProof EMG research platform")
@@ -76,6 +81,31 @@ def run_experiment_manifest(
     console.print(
         f"Ran [bold]{experiment['name']}[/bold] and wrote [bold]{experiment['report_path']}[/bold]"
     )
+
+
+@app.command("make-protocol")
+def make_protocol(
+    out: Path = typer.Option(Path("protocols/calibration.jsonl"), help="Protocol JSONL path"),
+    session_id: str = typer.Option("protocol", help="Session id to embed in task events"),
+    phase: str = typer.Option("calibration", help="Protocol phase"),
+    repetitions_per_label: int = typer.Option(5, help="Trials per intent label"),
+    cue_s: float = typer.Option(2.0, help="Cue duration per trial"),
+    rest_s: float = typer.Option(1.0, help="Rest duration before each cue"),
+    seed: int = typer.Option(42, help="Randomization seed"),
+) -> None:
+    """Generate a balanced rest/open/close task protocol."""
+    if phase not in {"calibration", "task", "perturbation"}:
+        raise typer.BadParameter("phase must be one of: calibration, task, perturbation")
+    trial_phase = cast(TrialPhase, phase)
+    trials = generate_trial_schedule(
+        phase=trial_phase,
+        repetitions_per_label=repetitions_per_label,
+        cue_s=cue_s,
+        rest_s=rest_s,
+        seed=seed,
+    )
+    count = write_trial_schedule_jsonl(trials, out, session_id=session_id)
+    console.print(f"Wrote {count} trials to [bold]{out}[/bold]")
 
 
 @app.command()

@@ -68,6 +68,12 @@ Repeatable runs can be stored as experiment manifests:
 driftproof run-manifest examples/demo_experiment.json
 ```
 
+Pilot task schedules can be generated as JSONL:
+
+```bash
+driftproof make-protocol --out protocols/calibration.jsonl --session-id pilot_001
+```
+
 ## Builder Docs
 
 Start with [docs/index.md](docs/index.md). It links the design specs for the

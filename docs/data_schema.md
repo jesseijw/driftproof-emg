@@ -76,6 +76,22 @@ Compact firmware capture lines can omit DriftProof metadata:
 }
 ```
 
+### `trial_spec`
+
+```json
+{
+  "type": "trial_spec",
+  "session_id": "demo",
+  "index": 1,
+  "label": "open",
+  "phase": "calibration",
+  "t_start": 1.0,
+  "t_end": 3.0,
+  "rest_before_s": 1.0,
+  "cue_s": 2.0
+}
+```
+
 ### `prediction`
 
 ```json

@@ -15,6 +15,8 @@ settings, and report path.
 ## Phase B: Pilot Characterization
 
 Small pilot cohort. The goal is protocol design, not headline claims.
+Use the [pilot protocol](pilot_protocol.md) and generated task schedules so
+sessions are comparable.
 
 Candidate perturbations:
 

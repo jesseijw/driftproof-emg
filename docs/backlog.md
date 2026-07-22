@@ -77,7 +77,7 @@ Done when: a live hardware session creates a valid replay file.
 
 - Experiment manifests: implemented for repeatable replay runs
 - Consent and safety review materials
-- Calibration task script
+- Calibration task script: implemented with `make-protocol`
 - Perturbation protocol
 - Analysis plan
 

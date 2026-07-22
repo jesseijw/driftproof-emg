@@ -9,7 +9,15 @@ import numpy as np
 
 from driftproof.types import EmgSample, IntentLabel
 
-KNOWN_RECORD_TYPES = {"emg_sample", "imu_sample", "task_event", "prediction", "session_metadata"}
+KNOWN_RECORD_TYPES = {
+    "emg_sample",
+    "imu_sample",
+    "prediction",
+    "protocol_metadata",
+    "session_metadata",
+    "task_event",
+    "trial_spec",
+}
 INTENT_LABELS: set[str] = {"rest", "open", "close"}
 
 
