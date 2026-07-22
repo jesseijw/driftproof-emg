@@ -1,0 +1,16 @@
+{
+  "name": "demo_synthetic_adaptation",
+  "session_path": "../data/demo/session.jsonl",
+  "report_path": "../reports/demo_manifest_scorecard.json",
+  "evaluation": {
+    "window_ms": 200,
+    "step_ms": 100,
+    "sample_rate_hz": 1000
+  },
+  "adaptation": {
+    "enabled": true,
+    "confidence_threshold": 0.6,
+    "momentum": 0.02
+  },
+  "notes": "Synthetic baseline/drift replay used for local smoke testing."
+}

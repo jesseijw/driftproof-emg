@@ -10,6 +10,7 @@ from rich.table import Table
 from driftproof.acquisition.capture import CaptureConfig, capture_lines_to_jsonl
 from driftproof.acquisition.simulated import generate_synthetic_session, write_jsonl
 from driftproof.evaluation.reporting import evaluate_session, write_scorecard_report
+from driftproof.experiments.manifest import ManifestError, run_manifest
 from driftproof.types import IntentLabel
 
 app = typer.Typer(help="DriftProof EMG research platform")
@@ -60,6 +61,21 @@ def capture_file(
             ),
         )
     console.print(f"Wrote {count} EMG samples to [bold]{out}[/bold]")
+
+
+@app.command("run-manifest")
+def run_experiment_manifest(
+    manifest: Path = typer.Argument(..., help="Experiment manifest JSON path"),
+) -> None:
+    """Run an evaluation from a versioned experiment manifest."""
+    try:
+        report = run_manifest(manifest)
+    except ManifestError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    experiment = report["experiment"]
+    console.print(
+        f"Ran [bold]{experiment['name']}[/bold] and wrote [bold]{experiment['report_path']}[/bold]"
+    )
 
 
 @app.command()

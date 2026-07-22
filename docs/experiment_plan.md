@@ -1,5 +1,9 @@
 # Experiment Plan
 
+Use [experiment manifests](experiment_manifests.md) for any run that should be
+repeatable. A manifest stores the session path, evaluator settings, adaptation
+settings, and report path.
+
 ## Phase A: Instrument Validation
 
 - Measure noise floor and saturation frequency.

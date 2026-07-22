@@ -62,6 +62,12 @@ Firmware JSONL dumps can be normalized into replayable sessions:
 driftproof capture-file firmware_dump.jsonl --out data/raw/session.jsonl
 ```
 
+Repeatable runs can be stored as experiment manifests:
+
+```bash
+driftproof run-manifest examples/demo_experiment.json
+```
+
 ## Builder Docs
 
 Start with [docs/index.md](docs/index.md). It links the design specs for the

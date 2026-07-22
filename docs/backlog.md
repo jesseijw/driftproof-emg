@@ -75,6 +75,7 @@ Done when: a live hardware session creates a valid replay file.
 
 ## M7: Human Pilot Protocol
 
+- Experiment manifests: implemented for repeatable replay runs
 - Consent and safety review materials
 - Calibration task script
 - Perturbation protocol

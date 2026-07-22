@@ -22,6 +22,7 @@ contracts and metrics are stable.
 - [Data schema](data_schema.md)
 - [Hardware](hardware.md)
 - [Experiment plan](experiment_plan.md)
+- [Experiment manifests](experiment_manifests.md)
 - [Roadmap](roadmap.md)
 - [Backlog](backlog.md)
 - [Glossary](glossary.md)
