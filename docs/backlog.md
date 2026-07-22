@@ -24,11 +24,12 @@ synthetic generation.
 
 ## M2: Baseline Scorecard
 
-- Macro F1
-- Confusion matrix
-- Per-intent failure rates
-- Clean vs drifted split
-- CSV or JSON report output
+- Macro F1: implemented
+- Confusion matrix: implemented
+- Per-intent failure rates: implemented
+- Clean vs drifted split: implemented
+- JSON report output: implemented
+- CSV report output: later if needed
 
 Done when: every experiment produces a machine-readable scorecard.
 

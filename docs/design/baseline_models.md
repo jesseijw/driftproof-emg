@@ -28,15 +28,36 @@ results separately for:
 - Accuracy
 - Macro F1
 - Confusion matrix
-- Latency per prediction
+- Per-intent failure rate
 - Drift score distribution
+- Latency per prediction later, once live prediction timing exists
 
 Accuracy alone is not enough. A controller can have acceptable average accuracy
 while still failing badly on one intent.
+
+## Scorecard Artifact
+
+The evaluator can write a JSON scorecard:
+
+```bash
+driftproof evaluate data/demo/session.jsonl --report reports/demo_scorecard.json
+```
+
+The JSON report includes:
+
+- `schema_version`
+- source session path
+- evaluation config
+- baseline and drifted splits
+- accuracy and macro F1
+- confusion matrix
+- per-intent failure rate
+- mean drift score for the drifted split
 
 ## Acceptance Criteria
 
 - Baseline training is reproducible with a fixed seed.
 - Evaluation reports clean and drifted performance separately.
 - At least one test proves that synthetic drift lowers baseline performance.
-- Model objects can be saved and reloaded without changing predictions.
+- Evaluation can write a machine-readable scorecard.
+- Model objects can be saved and reloaded without changing predictions later.

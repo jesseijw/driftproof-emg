@@ -49,7 +49,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install -e ".[dev]"
 driftproof simulate --out data/demo/session.jsonl --seconds 24 --drift-after-s 12
-driftproof evaluate data/demo/session.jsonl
+driftproof evaluate data/demo/session.jsonl --report reports/demo_scorecard.json
 python3 -m pytest
 ```
 

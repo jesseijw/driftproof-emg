@@ -45,3 +45,5 @@ class Scorecard:
     macro_f1: float
     drift_score_mean: float | None = None
     n_windows: int = 0
+    confusion_matrix: dict[str, dict[str, int]] | None = None
+    per_intent_failure_rate: dict[str, float] | None = None
