@@ -23,6 +23,8 @@ def test_evaluate_session_returns_machine_readable_scorecard(tmp_path) -> None:
     assert "per_intent_failure_rate" in report["splits"]["drifted"]
     assert report["functional"]["baseline"]["n_steps"] > 0
     assert report["functional"]["drifted"]["wrong_direction_commands"] >= 0
+    assert report["drift_calibration"]["target"] == "prediction_failure"
+    assert report["drift_calibration"]["best"] is not None
 
 
 def test_write_scorecard_report_creates_json(tmp_path) -> None:

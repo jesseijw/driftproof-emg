@@ -47,8 +47,8 @@ success metrics.
 
 - Calibration distribution fitting
 - Rolling drift scores
-- Threshold sweep
-- Failure correlation plots
+- Threshold sweep: implemented for prediction failure
+- Failure correlation plots: numeric report implemented; plots later
 
 Done when: drift threshold choices can be explained against functional failure,
 not only against synthetic distribution shift.

@@ -9,6 +9,7 @@ import numpy as np
 
 from driftproof.acquisition.replay import read_jsonl
 from driftproof.control.virtual_gripper import score_functional_control
+from driftproof.drift.calibration import threshold_report
 from driftproof.drift.mahalanobis import fit_reference, score
 from driftproof.evaluation.metrics import classify_scorecard
 from driftproof.features.classical import extract_many, feature_matrix
@@ -72,6 +73,7 @@ def evaluate_session(
                 t_end[test_mask],
             ),
         },
+        "drift_calibration": threshold_report(drift_scores, pred_drifted != y[test_mask]),
     }
 
 

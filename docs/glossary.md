@@ -34,3 +34,6 @@ position from `0.0` closed to `1.0` open.
 
 Functional score: A task-control metric computed from gripper behavior, such as
 target-position error or wrong-direction commands.
+
+Threshold sweep: Recomputing alert metrics across multiple drift-score cutoffs
+to see which thresholds best predict failures on a replay.
