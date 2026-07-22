@@ -29,24 +29,35 @@ driftproof/
   evaluation/       metrics and experiment scorecards
   cli.py            command-line entry point
 docs/
+  index.md
   architecture.md
   data_schema.md
   hardware.md
   experiment_plan.md
   roadmap.md
+  backlog.md
+  decision_log.md
+  glossary.md
+  design/          builder-facing component specs
 tests/
 ```
 
 ## Quick Start
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
-driftproof simulate --out data/demo/session.jsonl
+python3 -m pip install -e ".[dev]"
+driftproof simulate --out data/demo/session.jsonl --seconds 24 --drift-after-s 12
 driftproof evaluate data/demo/session.jsonl
-pytest
+python3 -m pytest
 ```
+
+## Builder Docs
+
+Start with [docs/index.md](docs/index.md). It links the design specs for the
+streaming protocol, preprocessing, baseline models, drift detection, adaptation,
+virtual gripper, and hardware interface.
 
 ## Current Build Strategy
 
